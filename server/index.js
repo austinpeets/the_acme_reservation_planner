@@ -38,9 +38,9 @@ const init = async() => {
             date: '05/20/2024'
         }),
         createReservation({
-            customer_id: lucy,
-            restaurant_id: olivegarden,
-            party_count: 5,
+            customer_id: lucy.id,
+            restaurant_id: olivegarden.id,
+            party_count: 4,
             date: '05/25/2024'
         })
     ]);
@@ -53,10 +53,22 @@ const init = async() => {
     app.listen(port, () => {
         console.log(`listening on port ${port}`);
         console.log('some curl commands to test');
-        console.log(`curl localhost:${port}/api/users`);
+        console.log(`curl localhost:${port}/api/customer`);
         console.log(`curl localhost:${port}/api/reservation`);
         console.log(`curl localhost:${port}/api/restaurant`);
     });
+
+    app.get('/api/customer', async (req, res, next) => {
+        try {
+            const SQL = ` SELECT * from customer`
+    
+            const response = await client.query(SQL)
+            console.log(response)
+            res.send(response.rows)
+        } catch (ex){
+            next(ex)
+        }
+    })
 };
 
 init();

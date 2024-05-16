@@ -68,7 +68,7 @@ const createReservation = async({ date, party_count, customer_id, restaurant_id 
     const SQL = `
     INSERT INTO reservation(id, date, party_count, customer_id, restaurant_id) VALUES($1, $2, $3, $4, $5) RETURNING *`;
     
-    const response = await client.query(SQL,[uuidv4(), date, customer_id, restaurant_id, party_count])
+    const response = await client.query(SQL,[uuidv4(), date, party_count, customer_id, restaurant_id])
     console.log(response)
     return response.rows[0]; 
 
