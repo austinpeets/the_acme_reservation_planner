@@ -1,4 +1,15 @@
-const { client } = require('./db')
+const {
+    client,
+    createTables,
+    createCustomer,
+    createReservation,
+    createRestaurant,
+    fetchCustomer,
+    fetchReservation,
+    fetchRestaurant,
+    destroyReservation } = require('./db.js')
+const express = require('express')
+const app = express();
 
 
 const init = async() => {
@@ -16,6 +27,36 @@ const init = async() => {
         createRestaurant({ name: 'cheesecakefactory'}),
         createRestaurant({ name: 'olivegarden'})
     ])
+    console.log(await fetchCustomer());
+    console.log(await fetchRestaurant());
+
+    const [reservation, reservation2] = await Promise.all([
+        createReservation({
+            customer_id: moe.id,
+            restaurant_id: applebees.id,
+            party_count: 3,
+            date: '05/20/2024'
+        }),
+        createReservation({
+            customer_id: lucy,
+            restaurant_id: olivegarden,
+            party_count: 5,
+            date: '05/25/2024'
+        })
+    ]);
+    console.log(await fetchReservation())
+    await destroyReservation({ id: reservation.id, customer_id: reservation.customer_id})
+    console.log(await fetchReservation())
+    
+
+    const port =  process.env.PORT || 3000;
+    app.listen(port, () => {
+        console.log(`listening on port ${port}`);
+        console.log('some curl commands to test');
+        console.log(`curl localhost:${port}/api/users`);
+        console.log(`curl localhost:${port}/api/reservation`);
+        console.log(`curl localhost:${port}/api/restaurant`);
+    });
 };
 
 init();
